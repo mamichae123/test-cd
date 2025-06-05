@@ -3,6 +3,7 @@
 readonly TEMPLATE="variant-temp.yaml"
 readonly DEFAULT_VARIANTS=2000
 readonly DEFAULT_REWRITE=false
+readonly VARIANT_LOCATION="prod"
 
 NUM_FILES=$DEFAULT_VARIANTS
 REWRITE=$DEFAULT_REWRITE
@@ -28,6 +29,8 @@ if [ ! -f "$TEMPLATE" ]; then
    exit 1
 fi
 
+mkdir -p VARIANT_LOCATION
+
 # Loop through the number of files
 for i in $(seq -f "%04g" 1 $NUM_FILES); do
   # Create the new file name
@@ -38,8 +41,7 @@ for i in $(seq -f "%04g" 1 $NUM_FILES); do
   fi
 
   # Copy the template to the new file
-  cp "$TEMPLATE" "$NEW_FILE"
-  sed -e "s/\${name}/variant-${i}/" "$NEW_FILE"
+  sed -e "s/\${name}/variant-${i}/" "$TEMPLATE" > "$VARIANT_LOCATION/$NEW_FILE"
 
   # Print a message
   echo "Created file: $NEW_FILE"
